@@ -8,14 +8,26 @@ namespace CSharp_Console_Simulation
 {
     class Program
     {
+        private int reorderPoint = 25;
+        private int orderSize = 35;
+        public Random random;
+
+
+        public Program(Random random)
+        {
+            this.random = random;
+        }// end of constructer
+
         static void Main(string[] args)
         {
+            Random random = new Random();
+            Program main = new Program(random);
             int profit = 8 - 4;
             double avg = 0.0;
 
             for (int s = 0; s < 1000; s++)
             {
-                avg += simulateMonth() * (profit);
+                avg += main.simulateMonth() * (profit);
             }// end of for
 
             avg /= 1000;
@@ -23,22 +35,19 @@ namespace CSharp_Console_Simulation
             Console.ReadLine();
         }
 
-        public static int simulateMonth()
+        public int simulateMonth()
         {
-            Random random = new Random();
-            int lostClients = 0;
-            int reorderPoint = 25;
-            int orderSize = 35;
-            int stock = 0;
             int receiveDay = -1;
+            int stock = 0;
+            int lostClients = 0;
             bool activeOrder = false;
 
             for (int i = 1; i <= 28; i++)
             {
 
                 // subtract sales...
-                stock -= getRandomDemand(random);
-                //System.out.println(stock);
+                int demand = this.getRandomDemand();
+                stock -= demand;
 
                 // stock received
                 if (i == receiveDay)
@@ -58,7 +67,7 @@ namespace CSharp_Console_Simulation
                 // reorder stock at reorderPoint of 25
                 if (stock <= reorderPoint && !activeOrder)
                 {
-                    receiveDay = getRandomLeadTime(random) + i;
+                    receiveDay = getRandomLeadTime() + i;
                     activeOrder = true;
                 }// end if
 
@@ -67,19 +76,19 @@ namespace CSharp_Console_Simulation
             return lostClients;
         }// end of simulateMonth
 
-        public static int getRandomDemand(Random r)
+        public int getRandomDemand()
         {
-            double num = r.NextDouble();
+            double r = random.NextDouble();
 
-            if (num < 0.261306533)
+            if (r < 0.261306533)
             {
                 return 5;
             }
-            else if (num < 0.48241206)
+            else if (r < 0.48241206)
             {
                 return 6;
             }
-            else if (num < 0.804020101)
+            else if (r < 0.804020101)
             {
                 return 7;
             }
@@ -89,15 +98,15 @@ namespace CSharp_Console_Simulation
             }// end if else
         }// end of getRandomDemand
 
-        public static int getRandomLeadTime(Random r)
+        public int getRandomLeadTime()
         {
-            double num = r.NextDouble();
+            double r = random.NextDouble();
 
-            if (num < 0.285714286)
+            if (r < 0.285714286)
             {
                 return 2;
             }
-            else if (num < 0.642857143)
+            else if (r < 0.642857143)
             {
                 return 3;
             }

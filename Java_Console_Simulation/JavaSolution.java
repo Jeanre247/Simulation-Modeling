@@ -1,38 +1,38 @@
 import java.util.Random;
 
-public class PrepMain{
+public class JavaSolution{
+  private int reorderPoint = 25;
+  private int orderSize = 35;
+  public Random random;
 
-  /*public Prepmain(){
-
-  }// end of constructer*/
+  public JavaSolution(Random random){
+    this.random = random;
+  }// end of constructer
 
   public static void main(String []args){
-    //Random random = new Random();
+    Random random = new Random();
+    PrepMain main = new PrepMain(random);
     int profit = 8 - 4;
     double avg = 0.0;
 
     for(int s = 0; s < 1000; s++){
-      avg += simulateMonth() * (profit);
+      avg += main.simulateMonth() * (profit);
     }// end of for
 
     avg /= 1000;
     System.out.println(avg);
   }// end fo main.
 
-  public static int simulateMonth(){
-    Random random = new Random();
-    int lostClients = 0;
-    int reorderPoint = 25;
-    int orderSize = 35;
-    int stock = 0;
+  public int simulateMonth(){
     int receiveDay = -1;
+    int stock = 0;
+    int lostClients = 0;
     boolean activeOrder = false;
 
     for(int i = 1; i <= 28; i++){
-
       // subtract sales...
-      stock -= getRandomDemand(random);
-      //System.out.println(stock);
+      int demand = this.getRandomDemand();
+      stock -= demand;
 
       // stock received
       if(i == receiveDay){
@@ -42,14 +42,14 @@ public class PrepMain{
       }// end if
 
       // lost sales or clients
-      if(stock <= 0){
+      if(stock < 0){
         lostClients += Math.abs(stock);
         stock = 0;
       }// end if
 
       // reorder stock at reorderPoint of 25
       if(stock <= 25 && !activeOrder){
-        receiveDay = getRandomLeadTime(random) + i;
+        receiveDay = this.getRandomLeadTime() + i;
         activeOrder = true;
       }// end if
 
@@ -58,26 +58,26 @@ public class PrepMain{
     return lostClients;
   }// end of simulateMonth
 
-  public static int getRandomDemand(Random r){
-    double num = r.nextDouble();
+  public int getRandomDemand(){
+    double r = random.nextDouble();
 
-    if(num < 0.261306533){
+    if(r < 0.261306533){
       return 5;
-    }else if(num < 0.48241206){
+    }else if(r < 0.48241206){
       return 6;
-    }else if(num < 0.804020101){
+    }else if(r < 0.804020101){
       return 7;
     }else{
       return 8;
     }// end if else
   }// end of getRandomDemand
 
-  public static int getRandomLeadTime(Random r){
-    double num = r.nextDouble();
+  public int getRandomLeadTime(){
+    double r = random.nextDouble();
 
-    if(num < 0.285714286){
+    if(r < 0.285714286){
       return 2;
-    }else if(num < 0.642857143){
+    }else if(r < 0.642857143){
       return 3;
     }else{
       return 4;
